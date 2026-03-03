@@ -1,0 +1,175 @@
+basePath: /
+definitions:
+  model.Subscription:
+    properties:
+      end_date:
+        description: '@example 01-2024'
+        type: string
+      price:
+        description: |-
+          @example 1000
+          @minimum 1
+        type: integer
+      service_name:
+        description: '@example Yandex Plus'
+        type: string
+      start_date:
+        description: '@example 09-2023'
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: nix32.dev@gmail.com
+    name: Kirill | nix32
+  description: API Server for Subscription Manager Application
+  title: Subscription Manager
+  version: "1.0"
+paths:
+  /change:
+    patch:
+      consumes:
+      - application/json
+      description: ChangeSubscription changes a subscription (NEED ID or UUID!)
+      parameters:
+      - description: Subscription ID
+        example: "123"
+        in: query
+        name: id
+        type: string
+      - description: Subscription UUID
+        example: 60601fee-2bf1-4721-ae6f-7636e79a0cba
+        format: uuid
+        in: query
+        name: uuid
+        type: string
+      - description: 'Optional: service_name, price, start_date, end_date'
+        in: body
+        name: subscription
+        required: true
+        schema:
+          $ref: '#/definitions/model.Subscription'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Change subscription
+      tags:
+      - subscriptions
+  /create:
+    post:
+      consumes:
+      - application/json
+      description: CreateSubscription creates a new subscription
+      parameters:
+      - description: 'Need: service_name, price, start_date, end_date(optional)'
+        in: body
+        name: subscription
+        required: true
+        schema:
+          $ref: '#/definitions/model.Subscription'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Subscription'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Create subscription
+      tags:
+      - subscriptions
+  /delete:
+    delete:
+      consumes:
+      - application/json
+      description: DeleteSubscription delete a subscription (NEED ID or UUID!)
+      parameters:
+      - description: Subscription ID
+        example: "123"
+        in: query
+        name: id
+        type: string
+      - description: Subscription UUID
+        example: 60601fee-2bf1-4721-ae6f-7636e79a0cba
+        format: uuid
+        in: query
+        name: uuid
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete subscription
+      tags:
+      - subscriptions
+  /list:
+    get:
+      consumes:
+      - application/json
+      description: Show subscription by page number (10 subs on one page), uuid/id
+      parameters:
+      - description: Page number
+        example: "1"
+        in: query
+        name: page
+        type: string
+      - description: Subscription ID
+        example: "123"
+        in: query
+        name: id
+        type: string
+      - description: Subscription UUID
+        example: 60601fee-2bf1-4721-ae6f-7636e79a0cba
+        format: uuid
+        in: query
+        name: uuid
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Subscription'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Subscriptions list
+      tags:
+      - subscriptions
+swagger: "2.0"

@@ -1,0 +1,257 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API Server for Subscription Manager Application",
+        "title": "Subscription Manager",
+        "contact": {
+            "name": "Kirill | nix32",
+            "email": "nix32.dev@gmail.com"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/change": {
+            "patch": {
+                "description": "ChangeSubscription changes a subscription (NEED ID or UUID!)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "subscriptions"
+                ],
+                "summary": "Change subscription",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "123",
+                        "description": "Subscription ID",
+                        "name": "id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "60601fee-2bf1-4721-ae6f-7636e79a0cba",
+                        "description": "Subscription UUID",
+                        "name": "uuid",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Optional: service_name, price, start_date, end_date",
+                        "name": "subscription",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Subscription"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/create": {
+            "post": {
+                "description": "CreateSubscription creates a new subscription",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "subscriptions"
+                ],
+                "summary": "Create subscription",
+                "parameters": [
+                    {
+                        "description": "Need: service_name, price, start_date, end_date(optional)",
+                        "name": "subscription",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Subscription"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/model.Subscription"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/delete": {
+            "delete": {
+                "description": "DeleteSubscription delete a subscription (NEED ID or UUID!)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "subscriptions"
+                ],
+                "summary": "Delete subscription",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "123",
+                        "description": "Subscription ID",
+                        "name": "id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "60601fee-2bf1-4721-ae6f-7636e79a0cba",
+                        "description": "Subscription UUID",
+                        "name": "uuid",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/list": {
+            "get": {
+                "description": "Show subscription by page number (10 subs on one page), uuid/id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "subscriptions"
+                ],
+                "summary": "Subscriptions list",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "1",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "123",
+                        "description": "Subscription ID",
+                        "name": "id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "60601fee-2bf1-4721-ae6f-7636e79a0cba",
+                        "description": "Subscription UUID",
+                        "name": "uuid",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Subscription"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.Subscription": {
+            "type": "object",
+            "properties": {
+                "end_date": {
+                    "description": "@example 01-2024",
+                    "type": "string"
+                },
+                "price": {
+                    "description": "@example 1000\n@minimum 1",
+                    "type": "integer"
+                },
+                "service_name": {
+                    "description": "@example Yandex Plus",
+                    "type": "string"
+                },
+                "start_date": {
+                    "description": "@example 09-2023",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,37 @@
+services:
+  subscriptions-service:
+    build: .
+    container_name: subscriptions-service
+    environment:
+      - DB_HOST=postgresql
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./logs:/var/log
+
+  postgresql:
+    image: postgres:18-bookworm
+    container_name: postgresql
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      PGDATA: /var/lib/postgresql/18/docker
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 3s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pgdata:
